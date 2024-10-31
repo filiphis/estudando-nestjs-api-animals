@@ -1,35 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAnimalDto } from './dto/create-animal.dto';
+import { UpdateAnimalDto } from './dto/update-animal.dto';
+import { Animal } from './types/animal.type';
 
 @Injectable()
 export class AnimalsService {
-  private animals: CreateAnimalDto[] = [];
+  private animals: Animal[] = [];
 
-  create(createAnimalDto: CreateAnimalDto) {
+  create(createAnimalDto: CreateAnimalDto): Animal {
     const id = this.animals.length + 1;
     const newAnimal = { id, ...createAnimalDto };
     this.animals.push(newAnimal);
     return newAnimal;
   }
 
-  findAll() {
+  findAll(): Animal[] {
     return this.animals;
   }
 
-  findOne(id: number) {
+  findOne(id: number): Animal | undefined {
     return this.animals.find((animal) => animal.id === id);
   }
 
-  update(id: number, updateAnimalDto: CreateAnimalDto) {
+  update(id: number, updateAnimalDto: UpdateAnimalDto): Animal | undefined {
     const index = this.animals.findIndex((animal) => animal.id === id);
     if (index !== -1) {
-      this.animals[index] = { id, ...updateAnimalDto };
-      return this.animals[index];
+      const existingAnimal = this.animals[index];
+      const updatedAnimal: Animal = { ...existingAnimal, ...updateAnimalDto };
+      this.animals[index] = updatedAnimal;
+      return updatedAnimal;
     }
-    return null;
+    return undefined;
   }
 
-  remove(id: number) {
+  remove(id: number): Animal | null {
     const index = this.animals.findIndex((animal) => animal.id === id);
     if (index !== -1) {
       const [removedAnimal] = this.animals.splice(index, 1);

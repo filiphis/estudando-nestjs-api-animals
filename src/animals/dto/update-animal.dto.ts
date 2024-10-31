@@ -1,7 +1,4 @@
-export class UpdateAnimalDto {
-  id: number;
-  nome: string;
-  idade: number;
-  sexo: string;
-  especie: string;
-}
+import { PartialType } from '@nestjs/swagger';
+import { CreateAnimalDto } from './create-animal.dto';
+
+export class UpdateAnimalDto extends PartialType(CreateAnimalDto) {}
